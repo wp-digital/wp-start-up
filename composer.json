@@ -1,0 +1,53 @@
+{
+  "name": "innocode-digital/wp-start-up",
+  "version": "1.0.0",
+  "type": "wordpress-muplugin",
+  "description": "WPStartUp plugin does initial setup after WordPress installation. Create projects in Bugsnag and Pingdom.",
+  "license": "GPL-2.0+",
+  "keywords": [
+    "wordpress",
+    "plugins",
+    "initial",
+    "setup",
+    "integrations",
+    "bugsnag",
+    "pingdom"
+  ],
+  "authors": [
+    {
+      "name": "Dinamo",
+      "email": "post@smfb-dinamo.com",
+      "homepage": "https://smfb-dinamo.com/"
+    },
+    {
+      "name": "Oleksandr Zhyian",
+      "email": "oleksandr.zhyian@gmail.com"
+    },
+    {
+      "name": "Viktor Kuliebiakin",
+      "email": "kuliebiakin@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "innocode-digital/php-cs": "^1.0",
+    "squizlabs/php_codesniffer": "^3.7"
+  },
+  "scripts": {
+    "phpcs": "vendor/bin/phpcs --standard=phpcs.xml",
+    "phpcbf": "vendor/bin/phpcbf --standard=phpcs.xml"
+  },
+  "autoload": {
+    "psr-4": {
+      "WPD\\WPStartUp\\": "src/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}
