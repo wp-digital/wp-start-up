@@ -25,8 +25,8 @@ abstract class AbstractProject implements IntegrationInterface {
 	 * @return void
 	 */
 	public function activate(): void {
-		if ( ! self::is_project_created() ) {
-			self::create_project();
+		if ( ! static::is_project_created() ) {
+			static::create_project();
 		}
 	}
 
@@ -34,13 +34,13 @@ abstract class AbstractProject implements IntegrationInterface {
 	 * @return void
 	 */
 	public function deactivate(): void {
-		self::delete_data();
+		static::delete_data();
 	}
 
 	/**
 	 * @return void
 	 */
 	public function init(): void {
-		self::activate();
+		static::activate();
 	}
 }
