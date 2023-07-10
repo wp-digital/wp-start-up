@@ -46,8 +46,8 @@ class Pingdom extends AbstractProject {
 			]
 		);
 
-		if ( ! is_wp_error( $checks ) && is_array( $checks ) ) {
-			$names = wp_list_pluck( $checks, 'name', 'id' );
+		if ( ! empty( $checks['checks'] ) ) {
+			$names = wp_list_pluck( $checks['checks'], 'name', 'id' );
 			$key   = array_search( PINGDOM_PROJECT, $names, true );
 
 			if ( $key ) {
@@ -59,32 +59,29 @@ class Pingdom extends AbstractProject {
 	}
 
 	/**
-	 * @return bool
+	 * @return void
 	 */
-	public function create_project_in_api(): bool {
+	public function create_project_in_api(): void {
 		$check = Tools::remote_request(
 			self::URL,
 			[
 				'headers' => [
+					'Accept'        => 'application/json',
 					'Authorization' => 'Bearer ' . PINGDOM_TOKEN,
 					'Content type'  => 'application/json',
 				],
 				'method'  => 'POST',
-				'body'    => json_encode(
-					[
-						'name' => PINGDOM_PROJECT,
-						'host' => parse_url( WP_HOME, PHP_URL_HOST ),
-						'type' => 'http',
-					]
-				),
+				'body'    => [
+					'name' => PINGDOM_PROJECT,
+					'host' => parse_url( WP_HOME, PHP_URL_HOST ),
+					'type' => 'http',
+				],
 			]
 		);
 
-		if ( ! empty( $check->id ) ) {
-			update_option( self::API_KEY_OPTION, $check->id );
+		if ( ! empty( $check['id'] ) ) {
+			update_option( self::API_KEY_OPTION, $check['id'] );
 		}
-
-		return ! empty( $check->id );
 	}
 
 	/**
