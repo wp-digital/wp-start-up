@@ -19,5 +19,16 @@ use WPD\WPStartUp;
 define( 'WPSTARTUP_FILE', __FILE__ );
 define( 'WPSTARTUP_VERSION', '0.0.1' );
 
-( new WPStartUp\Plugin() )->run();
+$GLOBALS['wp_start_up'] = new WPStartUp\Plugin();
+$GLOBALS['wp_start_up']->run();
 
+if ( ! function_exists( 'wp_start_up' ) ) {
+	/**
+	 * @return WPD\WPStartUp\Plugin|null
+	 */
+	function wp_start_up() : ?WPD\WPStartUp\Plugin {
+		global $wp_start_up;
+
+		return $wp_start_up;
+	}
+}

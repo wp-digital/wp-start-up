@@ -3,8 +3,28 @@
 namespace WPD\WPStartUp\Abstracts;
 
 use WPD\WPStartUp\Interfaces\IntegrationInterface;
+use WPD\WPStartUp\Interfaces\SenderInterface;
+use WPD\WPStartUp\Interfaces\StorageInterface;
 
 abstract class AbstractProject implements IntegrationInterface {
+
+	/**
+	 * @var StorageInterface
+	 */
+	protected StorageInterface $storage;
+	/**
+	 * @var SenderInterface
+	 */
+	protected SenderInterface $sender;
+
+	/**
+	 * @param StorageInterface|null $storage
+	 * @param SenderInterface|null  $sender
+	 */
+	public function __construct( ?StorageInterface $storage = null, ?SenderInterface $sender = null ) {
+		$this->storage = $storage ?: wp_start_up()->get_storage();
+		$this->sender  = $sender ?: wp_start_up()->get_sender();
+	}
 
 	/**
 	 * @return void

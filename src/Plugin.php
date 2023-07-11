@@ -2,21 +2,41 @@
 
 namespace WPD\WPStartUp;
 
+use WPD\WPStartUp\Interfaces\SenderInterface;
+use WPD\WPStartUp\Interfaces\StorageInterface;
+use WPD\WPStartUp\Senders\WPRequest;
+use WPD\WPStartUp\Storages\WPOption;
+
 final class Plugin {
 
 	/**
 	 * @var Interfaces\IntegrationInterface[]
 	 */
-	private $integrations;
+	private array $integrations;
+
+	/**
+	 * @var StorageInterface
+	 */
+	private StorageInterface $storage;
+
+	/**
+	 * @var SenderInterface
+	 */
+	private SenderInterface $sender;
 
 	/**
 	 * Plugin constructor
 	 */
 	public function __construct() {
-		$this->integrations = [
-			new Integrations\Bugsnag(),
-			new Integrations\Pingdom(),
-		];
+		$this->storage      = apply_filters( 'wp_start_up_default_storage', new WPOption() );
+		$this->sender       = apply_filters( 'wp_start_up_default_sender', new WPRequest() );
+		$this->integrations = apply_filters(
+			'wp_start_up_integrations',
+			[
+				new Integrations\Bugsnag(),
+				new Integrations\Pingdom(),
+			]
+		);
 	}
 
 	/**
@@ -54,5 +74,19 @@ final class Plugin {
 		foreach ( $this->integrations as $integration ) {
 			$integration->deactivate();
 		}
+	}
+
+	/**
+	 * @return StorageInterface
+	 */
+	public function get_storage(): StorageInterface {
+		return $this->storage;
+	}
+
+	/**
+	 * @return SenderInterface
+	 */
+	public function get_sender(): SenderInterface {
+		return $this->sender;
 	}
 }

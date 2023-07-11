@@ -13,8 +13,8 @@
     <arg name="parallel" value="8" />
 
     <!-- Set a minimum PHP version for PHPCompatibility. -->
-    <config name="testVersion" value="7.2-" />
+    <config name="testVersion" value="8.0-" />
 
-    <!-- Use Innocode Coding Standards. -->
-    <rule ref="Innocode" />
+    <!-- Use WPD Coding Standards. -->
+    <rule ref="WPD" />
 </ruleset>

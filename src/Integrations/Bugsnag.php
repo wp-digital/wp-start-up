@@ -3,7 +3,6 @@
 namespace WPD\WPStartUp\Integrations;
 
 use WPD\WPStartUp\Abstracts\AbstractProject;
-use WPD\WPStartUp\Tools;
 
 class Bugsnag extends AbstractProject {
 	const BASE_URL          = 'https://api.bugsnag.com/';
@@ -18,7 +17,7 @@ class Bugsnag extends AbstractProject {
 	 */
 	public function is_project_created(): bool {
 		return ( defined( 'BUGSNAG_API_KEY' ) && BUGSNAG_API_KEY )
-			|| get_option( self::API_KEY_OPTION );
+			|| $this->storage->get_data( self::API_KEY_OPTION );
 	}
 
 	/**
@@ -49,7 +48,7 @@ class Bugsnag extends AbstractProject {
 			}
 
 			if ( ! empty( $project['api_key'] ) ) {
-				update_option( self::API_KEY_OPTION, $project['api_key'] );
+				$this->storage->save_data( self::API_KEY_OPTION, $project['api_key'] );
 				$this->set_project_collaborators( $project );
 			}
 		}
@@ -59,7 +58,7 @@ class Bugsnag extends AbstractProject {
 	 * @return string
 	 */
 	private function get_organization_id(): string {
-		$organization_id = get_option( self::ORG_ID_OPTION, '' );
+		$organization_id = $this->storage->get_data( self::ORG_ID_OPTION, '' );
 
 		if ( ! $organization_id ) {
 			$organizations = $this->request_to_api( self::ORGANIZATIONS_URL );
@@ -69,7 +68,7 @@ class Bugsnag extends AbstractProject {
 				$organization_id = $organization['id'] ?? '';
 
 				if ( $organization_id ) {
-					update_option( self::ORG_ID_OPTION, $organization_id );
+					$this->storage->save_data( self::ORG_ID_OPTION, $organization_id );
 				}
 			}
 		}
@@ -162,18 +161,16 @@ class Bugsnag extends AbstractProject {
 	 * @return mixed
 	 */
 	private function request_to_api( string $url, string $method = 'GET', array $params = [] ) {
-		return Tools::remote_request(
+		return $this->sender->remote_request(
 			self::BASE_URL . $url,
+			$method,
 			[
-				'body'    => $method === 'PATCH' ? json_encode( $params ) : $params,
-				'headers' => [
-					'Accept'        => 'application/json',
-					'Authorization' => 'token ' . BUGSNAG_TOKEN,
-					'Content-Type'  => 'application/json',
-					'X-Version'     => '2',
-				],
-				'method'  => $method,
-			]
+				'Accept'        => 'application/json',
+				'Authorization' => 'token ' . BUGSNAG_TOKEN,
+				'Content-Type'  => 'application/json',
+				'X-Version'     => '2',
+			],
+			$method === 'PATCH' ? json_encode( $params ) : $params
 		);
 	}
 
@@ -181,7 +178,7 @@ class Bugsnag extends AbstractProject {
 	 * @return void
 	 */
 	public function delete_data(): void {
-		delete_option( self::ORG_ID_OPTION );
-		delete_option( self::API_KEY_OPTION );
+		$this->storage->delete_data( self::ORG_ID_OPTION );
+		$this->storage->delete_data( self::API_KEY_OPTION );
 	}
 }

@@ -3,7 +3,6 @@
 namespace WPD\WPStartUp\Integrations;
 
 use WPD\WPStartUp\Abstracts\AbstractProject;
-use WPD\WPStartUp\Tools;
 
 class Pingdom extends AbstractProject {
 	const URL            = 'https://api.pingdom.com/api/3.1/checks';
@@ -13,7 +12,7 @@ class Pingdom extends AbstractProject {
 	 * @return bool
 	 */
 	public function is_project_created(): bool {
-		return (bool) get_option( self::API_KEY_OPTION );
+		return (bool) $this->storage->get_data( self::API_KEY_OPTION );
 	}
 
 	/**
@@ -36,22 +35,14 @@ class Pingdom extends AbstractProject {
 	 * @return bool
 	 */
 	public function is_project_created_in_api(): bool {
-		$checks = Tools::remote_request(
-			self::URL,
-			[
-				'headers' => [
-					'Authorization' => 'Bearer ' . PINGDOM_TOKEN,
-				],
-				'method'  => 'GET',
-			]
-		);
+		$checks = $this->request_to_api();
 
 		if ( ! empty( $checks['checks'] ) ) {
 			$names = wp_list_pluck( $checks['checks'], 'name', 'id' );
 			$key   = array_search( PINGDOM_PROJECT, $names, true );
 
 			if ( $key ) {
-				update_option( self::API_KEY_OPTION, $names[ $key ] );
+				$this->storage->save_data( self::API_KEY_OPTION, $names[ $key ] );
 			}
 		}
 
@@ -62,32 +53,43 @@ class Pingdom extends AbstractProject {
 	 * @return void
 	 */
 	public function create_project_in_api(): void {
-		$check = Tools::remote_request(
-			self::URL,
+		$check = $this->request_to_api(
+			'POST',
 			[
-				'headers' => [
-					'Accept'        => 'application/json',
-					'Authorization' => 'Bearer ' . PINGDOM_TOKEN,
-					'Content type'  => 'application/json',
-				],
-				'method'  => 'POST',
-				'body'    => [
-					'name' => PINGDOM_PROJECT,
-					'host' => parse_url( WP_HOME, PHP_URL_HOST ),
-					'type' => 'http',
-				],
+				'name' => PINGDOM_PROJECT,
+				'host' => parse_url( WP_HOME, PHP_URL_HOST ),
+				'type' => 'http',
 			]
 		);
 
 		if ( ! empty( $check['id'] ) ) {
-			update_option( self::API_KEY_OPTION, $check['id'] );
+			$this->storage->save_data( self::API_KEY_OPTION, $check['id'] );
 		}
+	}
+
+	/**
+	 * @param string $method
+	 * @param array  $params
+	 *
+	 * @return mixed
+	 */
+	private function request_to_api( string $method = 'GET', array $params = [] ) {
+		return $this->sender->remote_request(
+			self::URL,
+			$method,
+			[
+				'Accept'        => 'application/json',
+				'Authorization' => 'Bearer ' . PINGDOM_TOKEN,
+				'Content type'  => 'application/json',
+			],
+			$params
+		);
 	}
 
 	/**
 	 * @return void
 	 */
 	public function delete_data(): void {
-		delete_option( self::API_KEY_OPTION );
+		$this->storage->delete_data( self::API_KEY_OPTION );
 	}
 }
