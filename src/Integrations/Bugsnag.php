@@ -170,7 +170,7 @@ class Bugsnag extends AbstractProject {
 				'Content-Type'  => 'application/json',
 				'X-Version'     => '2',
 			],
-			$method === 'PATCH' ? json_encode( $params ) : $params
+			$method === 'GET' ? $params : json_encode( $params )
 		);
 	}
 

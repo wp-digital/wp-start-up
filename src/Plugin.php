@@ -28,8 +28,14 @@ final class Plugin {
 	 * Plugin constructor
 	 */
 	public function __construct() {
-		$this->storage      = apply_filters( 'wp_start_up_default_storage', new WPOption() );
-		$this->sender       = apply_filters( 'wp_start_up_default_sender', new WPRequest() );
+		$this->storage = apply_filters( 'wp_start_up_default_storage', new WPOption() );
+		$this->sender  = apply_filters( 'wp_start_up_default_sender', new WPRequest() );
+	}
+
+	/**
+	 * @return void
+	 */
+	public function run(): void {
 		$this->integrations = apply_filters(
 			'wp_start_up_integrations',
 			[
@@ -37,12 +43,7 @@ final class Plugin {
 				new Integrations\Pingdom(),
 			]
 		);
-	}
 
-	/**
-	 * @return void
-	 */
-	public function run(): void {
 		register_activation_hook( WPSTARTUP_FILE, [ $this, 'activate' ] );
 		register_deactivation_hook( WPSTARTUP_FILE, [ $this, 'deactivate' ] );
 
