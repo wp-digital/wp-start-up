@@ -41,7 +41,7 @@ define( 'PINGDOM_TOKEN', '' );
 define( 'PINGDOM_PROJECT', '' );
 ```
 
-Please note that defining the `BUGSNAG_TOKEN` constant means the Bugsnag project is already created, and the plugin will not create a new one.
+Please note that defining the `BUGSNAG_API_KEY` constant means the Bugsnag project is already created, and the plugin will not create a new one.
 
 ### Usage
 
