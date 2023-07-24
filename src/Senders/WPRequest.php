@@ -7,13 +7,13 @@ use WPD\WPStartUp\Interfaces\SenderInterface;
 class WPRequest implements SenderInterface {
 
 	/**
-	 * @param string       $url
-	 * @param string       $method
-	 * @param array        $headers
-	 * @param string|array $data
+	 * @param string $url
+	 * @param string $method
+	 * @param array  $headers
+	 * @param mixed  $data
 	 * @return mixed
 	 */
-	public function remote_request( string $url, string $method, array $headers, string|array $data ) {
+	public function remote_request( string $url, string $method, array $headers, $data ) {
 		$response = wp_remote_request(
 			$url,
 			[

@@ -12,7 +12,7 @@ interface StorageInterface {
 	 * @param mixed  $data
 	 * @return bool
 	 */
-	public function save_data( string $name, mixed $data ): bool;
+	public function save_data( string $name, $data ): bool;
 
 	/**
 	 * Retrieves a data value based on an data name.

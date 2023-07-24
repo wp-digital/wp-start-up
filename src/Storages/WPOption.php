@@ -9,9 +9,10 @@ class WPOption implements StorageInterface {
 	/**
 	 * @param string $name
 	 * @param mixed  $data
+	 *
 	 * @return bool
 	 */
-	public function save_data( string $name, mixed $data ): bool {
+	public function save_data( string $name, $data ): bool {
 		return update_option( $name, $data );
 	}
 
