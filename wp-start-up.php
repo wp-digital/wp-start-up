@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WPStartUp
- * Description: Does initial setup after WordPress installation. Create projects in Bugsnag and Pingdom..
+ * Description: Does initial setup after WordPress installation. Create projects in Bugsnag and Pingdom.
  * Version: 0.0.1
  * Author: Dinamo
  * Author URI: https://smfb-dinamo.com
