@@ -12,7 +12,7 @@ There are two convenient ways to install WPStartUp:
    The recommended method is to use [Composer](https://getcomposer.org/). Simply run the following command:
 
    ```bash
-   composer require innocode-digital/wp-start-up
+   composer require wp-digital/wp-start-up
    ```
 
    WPStartUp will be installed as a [Must Use Plugin](https://codex.wordpress.org/Must_Use_Plugins) by default. If you wish to customize the installation path, you can control it using `extra.installer-paths` in your `composer.json`.

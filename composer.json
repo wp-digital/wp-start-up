@@ -1,5 +1,5 @@
 {
-  "name": "innocode-digital/wp-start-up",
+  "name": "wp-digital/wp-start-up",
   "version": "1.0.0",
   "type": "wordpress-muplugin",
   "description": "WPStartUp plugin does initial setup after WordPress installation. Create projects in Bugsnag and Pingdom.",
@@ -15,7 +15,7 @@
   ],
   "authors": [
     {
-      "name": "Dinamo",
+      "name": "SMFB Dinamo",
       "email": "post@smfb-dinamo.com",
       "homepage": "https://smfb-dinamo.com/"
     },

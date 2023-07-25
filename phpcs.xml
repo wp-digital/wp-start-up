@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Innocode Plugin"
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="WPD Plugin"
          xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
     <description>Coding standards for developed projects by SMFB+Dinamo.</description>
 
