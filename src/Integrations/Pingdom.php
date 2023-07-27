@@ -37,7 +37,7 @@ class Pingdom extends AbstractProject {
 	public function is_project_created_in_api(): bool {
 		$checks = $this->request_to_api();
 
-		if ( ! empty( $checks['checks'] ) ) {
+		if ( is_array( $checks ) && ! empty( $checks['checks'] ) ) {
 			$names = wp_list_pluck( $checks['checks'], 'name', 'id' );
 			$key   = array_search( PINGDOM_PROJECT, $names, true );
 
@@ -62,7 +62,7 @@ class Pingdom extends AbstractProject {
 			]
 		);
 
-		if ( ! empty( $check['id'] ) ) {
+		if ( is_array( $check ) && ! empty( $check['id'] ) ) {
 			$this->storage->save_data( self::API_KEY_OPTION, $check['id'] );
 		}
 	}
