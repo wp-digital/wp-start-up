@@ -26,15 +26,15 @@ class Pingdom extends AbstractProject {
 			return;
 		}
 
-		if ( ! self::is_project_created_in_api() ) {
-			self::create_project_in_api();
+		if ( $this->should_create_project() ) {
+			$this->create_project_in_api();
 		}
 	}
 
 	/**
 	 * @return bool
 	 */
-	public function is_project_created_in_api(): bool {
+	public function should_create_project(): bool {
 		$checks = $this->request_to_api();
 
 		if ( is_array( $checks ) && ! empty( $checks['checks'] ) ) {
@@ -46,7 +46,7 @@ class Pingdom extends AbstractProject {
 			}
 		}
 
-		return ! empty( $key );
+		return ! is_wp_error( $checks ) && empty( $key );
 	}
 
 	/**
