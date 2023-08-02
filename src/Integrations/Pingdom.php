@@ -46,6 +46,19 @@ class Pingdom extends AbstractProject {
 			}
 		}
 
+		if ( is_wp_error( $checks ) ) {
+			$plugin_directory = plugin_dir_path( WPSTARTUP_FILE );
+			$log_file         = $plugin_directory . 'logs.log';
+
+			if ( ! file_exists( $log_file ) ) {
+				$handle = fopen( $log_file, 'w' );
+				fclose( $handle );
+				chmod( $log_file, 0644 );
+			}
+
+			file_put_contents( $log_file, sprintf( "Error: %s Time: %s\n", json_encode( $checks ), gmdate( 'd m Y H:i' ) ), FILE_APPEND );
+		}
+
 		return ! is_wp_error( $checks ) && empty( $key );
 	}
 
