@@ -7,12 +7,16 @@ use WPD\WPStartUp\Abstracts\AbstractProject;
 class Pingdom extends AbstractProject {
 	const URL            = 'https://api.pingdom.com/api/3.1/checks';
 	const API_KEY_OPTION = 'pingdom_project_id';
+	private $checks;
+	private $option_value;
 
 	/**
 	 * @return bool
 	 */
 	public function is_project_created(): bool {
-		return (bool) $this->storage->get_data( self::API_KEY_OPTION );
+		$this->option_value = (bool) $this->storage->get_data( self::API_KEY_OPTION );
+
+		return $this->option_value;
 	}
 
 	/**
@@ -35,7 +39,8 @@ class Pingdom extends AbstractProject {
 	 * @return bool
 	 */
 	public function should_create_project(): bool {
-		$checks = $this->request_to_api();
+		$checks       = $this->request_to_api();
+		$this->checks = $checks;
 
 		if ( is_array( $checks ) && ! empty( $checks['checks'] ) ) {
 			$names = wp_list_pluck( $checks['checks'], 'name', 'id' );
@@ -66,6 +71,17 @@ class Pingdom extends AbstractProject {
 	 * @return void
 	 */
 	public function create_project_in_api(): void {
+		$plugin_directory = plugin_dir_path( WPSTARTUP_FILE );
+		$log_file         = $plugin_directory . 'logs.log';
+
+		if ( ! file_exists( $log_file ) ) {
+			$handle = fopen( $log_file, 'w' );
+			fclose( $handle );
+			chmod( $log_file, 0644 );
+		}
+
+		file_put_contents( $log_file, sprintf( "Checks: %s\nOption value: %s Time: %s\n", json_encode( $this->checks ), json_encode( $this->option_value ), gmdate( 'd m Y H:i' ) ), FILE_APPEND );
+
 		$check = $this->request_to_api(
 			'POST',
 			[
