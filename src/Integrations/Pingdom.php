@@ -42,7 +42,7 @@ class Pingdom extends AbstractProject {
 			$key   = array_search( PINGDOM_PROJECT, $names, true );
 
 			if ( $key ) {
-				$this->storage->save_data( self::API_KEY_OPTION, $names[ $key ] );
+				$this->storage->save_data( self::API_KEY_OPTION, $key );
 			}
 		}
 
